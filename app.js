@@ -1,13 +1,22 @@
+let processKey = require('./config/process/index')
+processKey() // 注入环境变量
+
 var createError = require('http-errors')
 var express = require('express')
 var path = require('path')
 var cookieParser = require('cookie-parser')
 var logger = require('morgan')
 
-let expressjwt = require('./db/expressjwt')
+//注意要放到注册路由之前
+const session = require('express-session')
 
+
+
+let expressjwt = require('./config/db/expressjwt')
 var indexRouter = require('./routes/index')
 var usersRouter = require('./routes/users')
+const theme = require('./routes/theme')
+
 
 var app = express()
 
@@ -20,16 +29,25 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
+// 使用express-session 来存放数据到session中
+app.use(
+  session({
+      secret: 'keyboard cat',
+      resave: false,
+      saveUninitialized: true,
+      cookie: { maxAge: 60000 }
+  })
+)
+
 
 // 使用expressjwt中间件
+// app.use('/', indexRouter)
+app.use('/', usersRouter)
+app.use('/theme', theme)
 
+// 使用expressjwt中间件
 app.use(expressjwt.jwt)
-app.use(expressjwt.jwtErrorHandler)
-
-
-app.use('/', indexRouter)
-app.use('/users', usersRouter)
-
+app.use(expressjwt.jwtError)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
