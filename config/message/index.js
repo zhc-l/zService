@@ -26,7 +26,7 @@ exports.sendSms = async function (phone, code) {
     var params = {
         "PhoneNumbers": phone,
         "SignName": "周浩臣的个人网站",
-        "TemplateCode": "SMS_284015056",
+        "TemplateCode": "SMS_462460341",
         "TemplateParam": "{\"code\":\"" + code + "\"}"
     }
     
