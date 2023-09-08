@@ -13,7 +13,7 @@ module.exports = {
       port: '9527',
       ref: 'origin/master',
       repo: 'https://github.com/zhc-l/zService.git',
-      path: '/freespirit',
+      path: '/zService',
       'post-deploy': 'npm run install && pm2 reload ecosystem.config.js --env production',
     },
   },
