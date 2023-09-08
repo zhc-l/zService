@@ -14,7 +14,7 @@ module.exports = {
       ref: 'origin/main',
       repo: 'git@github.com:zhc-l/zService.git',
       path: '/zService',
-      'post-deploy': 'npm run install && pm2 reload ecosystem.config.js --env production',
+      'post-deploy': 'npm install && pm2 reload ecosystem.config.js --env production',
     },
   },
 }
