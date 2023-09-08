@@ -29,7 +29,6 @@ exports.sendSms = async function (phone, code) {
         "TemplateCode": "SMS_462460341",
         "TemplateParam": "{\"code\":\"" + code + "\"}"
     }
-    
     var requestOption = {
         method: 'POST',
         formatParams: false,

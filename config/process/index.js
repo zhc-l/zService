@@ -7,11 +7,9 @@ const jsonKey = {
     jwt:{
         JWT_SECRET_KEY : 'gfg_jwt_secret_key',
         TOKEN_HEADER_KEY : 'gfg_token_header_key',
-        JWT_DATE : '24h'
+        JWT_DATE : 60*60,
     }
 }
-
-
 
 module.exports = () => {
     // 注入环境变量

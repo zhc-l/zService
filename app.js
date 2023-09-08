@@ -6,18 +6,13 @@ var express = require('express')
 var path = require('path')
 var cookieParser = require('cookie-parser')
 var logger = require('morgan')
+const { jwtAuthExclued } = require('./config/jwt/index') // jwt验证中间件
 
 //注意要放到注册路由之前
 const session = require('express-session')
-
-
-
-let expressjwt = require('./config/db/expressjwt')
 var indexRouter = require('./routes/index')
 var usersRouter = require('./routes/users')
 const theme = require('./routes/theme')
-
-
 var app = express()
 
 // view engine setup
@@ -39,15 +34,13 @@ app.use(
   })
 )
 
+// jwt 验证
+app.use(jwtAuthExclued)
 
-// 使用expressjwt中间件
 // app.use('/', indexRouter)
 app.use('/', usersRouter)
 app.use('/theme', theme)
 
-// 使用expressjwt中间件
-app.use(expressjwt.jwt)
-app.use(expressjwt.jwtError)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

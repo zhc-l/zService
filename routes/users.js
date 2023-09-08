@@ -3,8 +3,9 @@ const jwt = require('jsonwebtoken')
 var router = express.Router()
 const { sendSms } = require('../config/message/index')
 const promisePool = require('../config/db/index')
+const { getJwtToken } = require('../config/jwt/index')
 
-
+// 登陆
 router.post('/login', function (req, res, next) {
   const { username, password } = req.body
   // username可能是用户名或者邮箱 password是密码
@@ -13,7 +14,7 @@ router.post('/login', function (req, res, next) {
       let data = {
         ...rows[0],
       }
-      let token = jwt.sign(data,process.env.JWT_SECRET_KEY,{expiresIn: process.env.JWT_DATE})
+      let token = getJwtToken(data)
       res.send({
         code: 200,
         msg: '登录成功',
@@ -46,6 +47,7 @@ router.post('/login', function (req, res, next) {
       })
     }
   }).catch(err => {
+    console.log(err,'===')
     res.send({
       code: 400,
       msg: '登录失败',
@@ -136,12 +138,17 @@ router.post('/forgetPassword', function (req, res, next) {
   }
 })
 
-
-
-
-
+// 注册
 router.post('/register', function (req, res, next) {
-  const { username, password, createdDate, mobile, email } = req.body
+  const { username, password, createdDate, mobile, email, captcha } = req.body
+  if (req.session.verificationCode !== captcha) {
+    res.send({
+      code: 400,
+      msg: '验证码错误',
+      data: null
+    })
+    return;
+  }
   promisePool.query(`SELECT * FROM users WHERE username='${username}' OR mobile='${mobile}' OR email='${email}'`).then(([rows, fields]) => {
     if (rows.length > 0) {
       // 判断是用户名还是手机号还是邮箱已经存在
@@ -167,7 +174,7 @@ router.post('/register', function (req, res, next) {
         })
       }
     } else {
-      promisePool.query(`INSERT INTO users (username, password, createdDate, mobile, email, ) VALUES ('${username}', '${password}', '${createdDate}', '${mobile}', '${email}')`).then(([rows, fields]) => {
+      promisePool.query(`INSERT INTO users (username, password, created_date, mobile, email ) VALUES ('${username}', '${password}', '${createdDate}', '${mobile}', '${email}')`).then(([rows, fields]) => {
         res.send({
           code: 200,
           msg: '注册成功',
@@ -190,6 +197,7 @@ router.post('/register', function (req, res, next) {
   })
 })
 
+// 发送短信
 router.post('/sendSms', function (req, res, next) {
   const { mobile } = req.body
   if (!mobile) {
@@ -217,9 +225,10 @@ router.post('/sendSms', function (req, res, next) {
   })
 })
 
+// 验证短信
 router.post('/verifySms', function (req, res, next) {
-  const { verificationCode } = req.body
-  if (req.session.verificationCode === verificationCode) {
+  const { captcha } = req.body
+  if (req.session.verificationCode === captcha) {
     req.session.destroy()
     res.send({
       code: 200,
