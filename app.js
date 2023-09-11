@@ -37,8 +37,8 @@ app.use(
 // jwt 验证
 app.use(jwtAuthExclued)
 
-// app.use('/', indexRouter)
-app.use('/', usersRouter)
+app.use('/', indexRouter)
+app.use('/users', usersRouter)
 app.use('/theme', theme)
 
 

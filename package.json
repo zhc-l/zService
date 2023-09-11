@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www",
+    "apidoc": "apidoc -i ./",
+    "pm2update": "pm2 ecosystem.config.js production update"
   },
   "dependencies": {
     "@alicloud/pop-core": "^1.7.13",
@@ -20,5 +22,12 @@
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
+  },
+  "apidoc": {
+    "name": "example", 
+    "version": "0.3.0", 
+    "description": "apiDoc basic example", 
+    "title": "Custom apiDoc browser title", 
+    "url" : "116.62.114.25:9527"
   }
 }

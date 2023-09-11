@@ -5,7 +5,24 @@ const { sendSms } = require('../config/message/index')
 const promisePool = require('../config/db/index')
 const { getJwtToken } = require('../config/jwt/index')
 
-// 登陆
+/**
+ * @api {post} /users/login 登录
+ * @apiDescription 登录
+ * @apiName login
+ * @apiGroup users
+ * @apiParam {String} username 用户名
+ * @apiParam {String} password 密码
+ * @apiSuccess {Object} data 用户信息
+ * @apiSuccess {String} msg 信息说明
+ * @apiSuccess {Number} code 200
+ * @apiSuccessExample {json} Success-Response:
+ * {
+ *  "code": 200,
+ * "msg": "登录成功",
+ * "data": {}
+ * }
+ * 
+ */
 router.post('/login', function (req, res, next) {
   const { username, password } = req.body
   // username可能是用户名或者邮箱 password是密码
@@ -56,7 +73,23 @@ router.post('/login', function (req, res, next) {
   })
 })
 
-// 短信登陆
+/**
+ * @api {post} /users/loginBySms 短信登录
+ * @apiDescription 短信登录
+ * @apiName loginBySms
+ * @apiGroup users
+ * @apiParam {String} mobile 手机号
+ * @apiParam {String} captcha 验证码
+ * @apiSuccess {Object} data 用户信息
+ * @apiSuccess {String} msg 信息说明
+ * @apiSuccess {Number} code 200
+ * @apiSuccessExample {json} Success-Response:
+ * {
+ * "code": 200,
+ * "msg": "登录成功",
+ * "data": {}
+ * }
+ */
 router.post('/loginBySms', function (req, res, next) {
   const { mobile, captcha } = req.body
   if (req.session.verificationCode === captcha) {
@@ -97,6 +130,24 @@ router.post('/loginBySms', function (req, res, next) {
 })
 
 // 忘记密码 手机号找回
+/**
+ * @api {post} /users/forgetPassword 忘记密码 手机号找回
+ * @apiDescription 忘记密码 手机号找回
+ * @apiName forgetPassword
+ * @apiGroup users
+ * @apiParam {String} mobile 手机号
+ * @apiParam {String} captcha 验证码
+ * @apiParam {String} password 新密码
+ * @apiSuccess {Object} data 用户信息
+ * @apiSuccess {String} msg 信息说明
+ * @apiSuccess {Number} code 200
+ * @apiSuccessExample {json} Success-Response:
+ * {
+ * "code": 200,
+ * "msg": "修改成功",
+ * "data": {}
+ * }
+ */
 router.post('/forgetPassword', function (req, res, next) {
   const { mobile, captcha, password } = req.body
   if (req.session.verificationCode === captcha) {
@@ -139,6 +190,27 @@ router.post('/forgetPassword', function (req, res, next) {
 })
 
 // 注册
+/**
+ * @api {post} /users/register 注册
+ * @apiDescription 注册
+ * @apiName register
+ * @apiGroup users
+ * @apiParam {String} username 用户名
+ * @apiParam {String} password 密码
+ * @apiParam {String} createdDate 创建时间
+ * @apiParam {String} mobile 手机号
+ * @apiParam {String} email 邮箱
+ * @apiParam {String} captcha 验证码
+ * @apiSuccess {Object} data 用户信息
+ * @apiSuccess {String} msg 信息说明
+ * @apiSuccess {Number} code 200
+ * @apiSuccessExample {json} Success-Response:
+ * {
+ * "code": 200,
+ * "msg": "注册成功",
+ * "data": {}
+ * }
+ */
 router.post('/register', function (req, res, next) {
   const { username, password, createdDate, mobile, email, captcha } = req.body
   if (req.session.verificationCode !== captcha) {
@@ -197,7 +269,22 @@ router.post('/register', function (req, res, next) {
   })
 })
 
-// 发送短信
+/**
+ * @api {post} /users/sendSms 发送短信
+ * @apiDescription 发送短信
+ * @apiName sendSms
+ * @apiGroup users
+ * @apiParam {String} mobile 手机号
+ * @apiSuccess {Object} data 用户信息
+ * @apiSuccess {String} msg 信息说明
+ * @apiSuccess {Number} code 200
+ * @apiSuccessExample {json} Success-Response:
+ * {
+ * "code": 200,
+ * "msg": "发送成功",
+ * "data": {}
+ * }
+ */
 router.post('/sendSms', function (req, res, next) {
   const { mobile } = req.body
   if (!mobile) {
@@ -225,7 +312,22 @@ router.post('/sendSms', function (req, res, next) {
   })
 })
 
-// 验证短信
+/**
+ * @api {post} /users/verifySms 验证短信（一般不需要调用）
+ * @apiDescription 验证短信
+ * @apiName verifySms
+ * @apiGroup users
+ * @apiParam {String} captcha 验证码
+ * @apiSuccess {Object} data 用户信息
+ * @apiSuccess {String} msg 信息说明
+ * @apiSuccess {Number} code 200
+ * @apiSuccessExample {json} Success-Response:
+ * {
+ * "code": 200,
+ * "msg": "验证成功",
+ * "data": {}
+ * }
+ */
 router.post('/verifySms', function (req, res, next) {
   const { captcha } = req.body
   if (req.session.verificationCode === captcha) {
@@ -243,5 +345,6 @@ router.post('/verifySms', function (req, res, next) {
     })
   }
 })
+
 
 module.exports = router

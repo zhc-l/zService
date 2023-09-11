@@ -23,7 +23,7 @@ const jwtAuth = (req, res, next) => {
 }
 
 
-const jwtSkipAuthList = ['/login','/loginBySms','/forgetPassword','/register','/sendSms','verifySms','/theme']
+const jwtSkipAuthList = ['/users/login','/users/loginBySms','/users/forgetPassword','/users/register','/users/sendSms','/users/verifySms','/theme']
 
 module.exports.jwtAuthExclued = (req, res, next) => {
     if (jwtSkipAuthList.includes(req.path)) {
