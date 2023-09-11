@@ -5,7 +5,7 @@
   "scripts": {
     "start": "nodemon ./bin/www",
     "apidoc": "apidoc -i ./",
-    "pm2update": "pm2 ecosystem.config.js production update"
+    "pm2update": "pm2 deploy ecosystem.config.js production update"
   },
   "dependencies": {
     "@alicloud/pop-core": "^1.7.13",
